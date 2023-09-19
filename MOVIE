@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+// Constants
+const int NUM_ROWS = 5;
+const int NUM_COLS = 10;
+
+// Function to display the seating chart
+void displaySeatingChart(const vector<vector<char>>& seats) {
+    cout << "  ";
+    for (int col = 0; col < NUM_COLS; col++) {
+        cout << setw(3) << col + 1;
+    }
+    cout << endl;
+
+    for (int row = 0; row < NUM_ROWS; row++) {
+        cout << static_cast<char>('A' + row) << " ";
+        for (int col = 0; col < NUM_COLS; col++) {
+            cout << setw(3) << seats[row][col];
+        }
+        cout << endl;
+    }
+}
+
+// Function to book a ticket
+bool bookTicket(vector<vector<char>>& seats, int row, int col) {
+    if (row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS || seats[row][col] == 'X') {
+        cout << "Invalid seat selection. Please choose an available seat." << endl;
+        return false;
+    }
+
+    seats[row][col] = 'X';
+    cout << "Ticket booked successfully for seat " << static_cast<char>('A' + row) << col + 1 << endl;
+    return true;
+}
+
+int main() {
+    vector<vector<char>> seatingChart(NUM_ROWS, vector<char>(NUM_COLS, 'O'));
+
+    cout << "Welcome to the Movie Ticket Booking System!" << endl;
+
+    while (true) {
+        cout << "\nSeating Chart:" << endl;
+        displaySeatingChart(seatingChart);
+
+        char rowChoice;
+        int colChoice;
+
+        cout << "\nEnter row (A-E) and seat number (1-10) to book a ticket (e.g., A1): ";
+        cin >> rowChoice >> colChoice;
+
+        int row = static_cast<int>(toupper(rowChoice)) - 'A';
+        int col = colChoice - 1;
+
+        if (bookTicket(seatingChart, row, col)) {
+            char anotherBooking;
+            cout << "Do you want to book another ticket? (Y/N): ";
+            cin >> anotherBooking;
+            if (toupper(anotherBooking) != 'Y') {
+                cout << "Thank you for using the Movie Ticket Booking System. Enjoy your movie!" << endl;
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
